@@ -30,7 +30,7 @@
 
         public List<ImagesDTO> Images { get; set; }
 
-        public List<SizeProductDTO> SizeProducts { get; set; }
+        public List<ProductSizeDTO> ProductSizes { get; set; }
 
         public List<ProductReviewDTO> ProductReviews { get; set; }
 

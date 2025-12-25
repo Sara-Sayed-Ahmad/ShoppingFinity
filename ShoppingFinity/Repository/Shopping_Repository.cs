@@ -100,7 +100,7 @@ namespace ShoppingFinity.Repository
         {
             var product = await _context.Products
                 .Include(img => img.Images)
-                .Include(s => s.SizeProducts)
+                .Include(s => s.ProductSizes)
                 .Include(c => c.Category)
                 .Include(dc => dc.ProductCategories).ToListAsync();
 
@@ -112,7 +112,7 @@ namespace ShoppingFinity.Repository
         {
             var product = await _context.Products
                 .Include(img => img.Images)
-                .Include(s => s.SizeProducts)
+                .Include(s => s.ProductSizes)
                 .Include(c => c.Category)
                 .Include(dc => dc.ProductCategories)
                 .Where(p => p.ProductId == id).FirstOrDefaultAsync();
@@ -157,20 +157,20 @@ namespace ShoppingFinity.Repository
         }
 
         //Get size by id
-        public async Task <SizeProductDTO> GetSizeByIds(int idSize)
+        public async Task <SizeDTO> GetSizeByIds(int idSize)
         {
-            var size = await _context.SizeProducts.Where(x => x.SizeId == idSize).FirstOrDefaultAsync(); ;
+            var size = await _context.Sizes.Where(x => x.SizeId == idSize).FirstOrDefaultAsync(); ;
 
-            return _mapper.Map<SizeProductDTO>(size);
+            return _mapper.Map<SizeDTO>(size);
         }
 
         //Get size by id product
-        public async Task<List<SizeProductDTO>> GetSizeByIdPro(int productId)
+        public async Task<List<ProductSizeDTO>> GetSizeByIdPro(int productId)
         {
-            var size = await _context.SizeProducts
-                .Where(x => x.ProductId == productId).ToListAsync(); ;
+            var size = await _context.ProductSizes
+                .Where(x => x.ProductId == productId).ToListAsync();
 
-            return _mapper.Map<List<SizeProductDTO>>(size);
+            return _mapper.Map<List<ProductSizeDTO>>(size);
         }
         
         //Get all reviews
@@ -319,15 +319,11 @@ namespace ShoppingFinity.Repository
         //Add Size for product by admin
         public async Task AddSizeProduct(AddSizeDTO size)
         {
-            foreach(var sizeName in size.SizeName)
+            var sizeProd = new Size()
             {
-                var sizeProd = new SizeProduct()
-                {
-                    SizeName = sizeName,
-                    ProductId = size.ProductId
-                };
-                _context.SizeProducts.Add(sizeProd);
-            }
+                SizeName = size.SizeName
+            };
+            _context.Sizes.Add(sizeProd);
 
             await _context.SaveChangesAsync();
         }
@@ -569,14 +565,14 @@ namespace ShoppingFinity.Repository
         //Delete size for product
         public async Task DeleteSize(int id)
         {
-            var sizeProd = await _context.SizeProducts.FindAsync(id);
+            var sizeProd = await _context.Sizes.FindAsync(id);
 
             if (sizeProd == null)
             {
                 throw new ApplicationException("Size is not found");
             }
 
-            _context.SizeProducts.Remove(sizeProd);
+            _context.Sizes.Remove(sizeProd);
             await _context.SaveChangesAsync();
         }
     }

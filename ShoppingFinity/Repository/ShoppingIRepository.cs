@@ -51,11 +51,11 @@ namespace ShoppingFinity.Repository
         //Get favorite by user id
         Task<List<FavoriteDTO>> GetFavoriteById(string idUser);
 
-        //Get size for product by id
-        Task<SizeProductDTO> GetSizeByIds(int idSize);
+        //Get size by id
+        Task<SizeDTO> GetSizeByIds(int idSize);
 
         //Get size by id product
-        Task<List<SizeProductDTO>> GetSizeByIdPro(int productId);
+        Task<List<ProductSizeDTO>> GetSizeByIdPro(int productId);
 
         //Get all reviews
         Task<List<ProductReviewDTO>> GetallReviews();

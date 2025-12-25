@@ -34,15 +34,17 @@ namespace ShoppingFinity.Model
 
         public ICollection<DetailsCategory> DetailsCategories { get; set; }
 
+        public ICollection<Size> Sizes { get; set; }
+
         public List<Favorite> Favorites { get; set; }
 
         public List<OrderItem> OrderItems { get; set; }
 
         public List<ProductCategory> ProductCategories { get; set; }
 
-        public List<Images> Images { get; set; }
+        public List<ProductSize> ProductSizes { get; set; }
 
-        public List<SizeProduct> SizeProducts { get; set; }
+        public List<Images> Images { get; set; }
 
         public List<ProductReview> ProductReviews { get; set; }
     }

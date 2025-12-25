@@ -48,7 +48,7 @@ namespace ShoppingFinity.Helper
             CreateMap<ProductReview, ProductReviewDTO>().ReverseMap();
 
             //SizeProduct -> SizeProductDTO
-            CreateMap<SizeProduct, SizeProductDTO>().ReverseMap();
+            CreateMap<ProductSize, ProductSizeDTO>().ReverseMap();
 
             //Transaction -> TransactionDTO
             CreateMap<Transaction, TransactionDTO>().ReverseMap();

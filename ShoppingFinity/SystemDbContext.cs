@@ -17,7 +17,8 @@ namespace ShoppingFinity
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Images> Images { get; set; }
-        public DbSet<SizeProduct> SizeProducts { get; set; }
+        public DbSet<ProductSize> ProductSizes { get; set; }
+        public DbSet<Size> Sizes { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<DetailsCategory> DetailsCategories { get; set; }
         public DbSet<ProductCategory> productCategories { get; set; }
@@ -76,12 +77,6 @@ namespace ShoppingFinity
                 o.Property(o => o.TotalAmount).HasColumnType("float");
                 //o.Property(o => o.TrackingNum).ValueGeneratedOnAdd();
                 o.Property(o => o.CreatedAt).HasDefaultValueSql("CONVERT(DATE, GETDATE())");
-            });
-
-            //tb.4 SizeProduct
-            modelBuilder.Entity<SizeProduct>(s =>
-            {
-                s.Property(s => s.SizeName).HasColumnType("varchar(50)").IsRequired();
             });
 
             //tb.5 Images
@@ -254,10 +249,24 @@ namespace ShoppingFinity
                 .HasOne(p => p.Product)
                 .WithMany(img => img.Images);
 
-            //RT.10 Product and SizeProduct: one to many
-            modelBuilder.Entity<SizeProduct>()
-                .HasOne(p => p.Product)
-                .WithMany(sp => sp.SizeProducts);
+            //RT.10 Product and Size: many to many
+            modelBuilder.Entity<Product>()
+               .HasMany(s => s.Sizes)
+               .WithMany(p => p.Products)
+               .UsingEntity<ProductSize>(
+                   ps => ps
+                         .HasOne(s => s.Size)
+                         .WithMany(p => p.ProductSizes)
+                         .HasForeignKey(ps => ps.SizeId),
+                   ps => ps
+                         .HasOne(p => p.Product)
+                         .WithMany(s => s.ProductSizes)
+                         .HasForeignKey(sp => sp.ProductId),
+                    ps =>
+                    {
+                        ps.HasKey(p => new { p.ProductId, p.SizeId });
+                    }
+               );
 
             //RT.11 Product and ProductReview: one to many
             modelBuilder.Entity<ProductReview>()
@@ -293,13 +302,17 @@ namespace ShoppingFinity
                         .HasOne(p => p.Product)
                         .WithMany(pc => pc.ProductCategories)
                         .HasForeignKey(pro => pro.ProductId)
-                        //.OnDelete(DeleteBehavior.ClientCascade),
                         .OnDelete(DeleteBehavior.Restrict),
                     pd =>
                             {
                                 pd.HasKey(pdc => new { pdc.ProductId, pdc.DetailsId });
                             }
                     );
+            //RT.16 Size and OrderItem: one to many
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(s => s.Size)
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(so => so.SizeId);
         }
     }
 }

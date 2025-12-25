@@ -5,9 +5,6 @@ namespace ShoppingFinity.Model.AddDTOs
     public class AddSizeDTO
     {
         [Required(ErrorMessage ="Size Name is required")]
-        public List<string> SizeName { get; set; }
-
-        [Required(ErrorMessage ="Product Name is required")]
-        public int ProductId { get; set; }
+        public string SizeName { get; set; }
     }
 }
